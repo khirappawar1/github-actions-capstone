@@ -1,0 +1,47 @@
+---
+name: Reusable Build and Test
+on:
+    workflow_call:
+      inputs:
+        pyhton_version:
+            required: true
+            type: string
+        run_tests:
+            type: boolean
+            default: true
+      outputs:
+            test_result:
+              value: ${{ jobs.build.outputs.result }}
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        outputs:
+            result: ${{steps.test.outputs.result}}
+        steps:
+            - name: Checkout the python code
+              uses: actions/checkout@v4
+
+            - name: Setup python
+              uses: actions/setup-python@v5
+              with:
+                python-version: ${{inputs.pyhton_version}}
+            - run: npm install -r requiremnets.txt
+
+            - name: Run Test
+              id: test
+              if: ${{ inputs.run_tests}}
+              run: |
+                chmod +x tests/test.sh
+                if ./tests/test.sh; then
+                 echo "reslut==passed" >> GITHUB_OUTPUT
+                else
+                 echo "result==failed" >> GITHUB_OUTPUT
+                 exit 1 
+                fi 
+
+
+
+
+
+

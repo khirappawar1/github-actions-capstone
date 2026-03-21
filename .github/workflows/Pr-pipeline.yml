@@ -1,0 +1,24 @@
+---
+name: PR Pipeline
+on:
+    pull_request:
+        branches: [main]
+        types:
+          - opened
+          - synchronize
+jobs:
+    build-test:
+      uses: ./.github/workflows/reusable-build-test.yml
+      with:
+        pyhton-version: "3.12"
+        run_test: true
+    
+    pr-comment:
+        needs: build-test
+        runs-on: ubuntu-latest
+        steps:
+            - name: PR checks passed for branch
+              run: |
+                echo "## PR Check Result" >> $GITHUB_STEP_SUMMARY
+                echo "- Branch: ${{ github.head_ref }}" >> $GITHUB_STEP_SUMMARY
+                echo "- Status: PASSED" >> $GITHUB_STEP_SUMMARY
