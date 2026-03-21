@@ -1,0 +1,28 @@
+---
+name: Main Pipeline
+on:
+    push:
+        branches: [main]
+jobs:
+    build-test:
+        uses: ./.github/workflows/reusable-build-test.yml
+        with:
+          python_version: 3.12
+         
+    docker:
+        needs: build-test
+        uses: ./.github/workflows/reusable-docker.yml
+        with:
+          image_name: ${{ secrets.DOCKER_USERNAME }}/capstone-app
+          tag: latest
+        secrets:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_token: ${{ secrets.DOCKER_TOKEN }}
+
+    deploy:
+      needs: docker
+      runs-on: ubuntu-latest
+      environment: production
+      steps:
+        - name: Deploy
+          run: echo 'Deploying ${{ needs.docker.outputs.image_url }}' 
