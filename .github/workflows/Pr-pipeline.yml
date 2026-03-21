@@ -19,6 +19,6 @@ jobs:
         steps:
             - name: PR checks passed for branch
               run: |
-                echo "## PR Check Result" >> $GITHUB_STEP_SUMMARY
+                echo "# PR Check Result" >> $GITHUB_STEP_SUMMARY
                 echo "- Branch: ${{ github.head_ref }}" >> $GITHUB_STEP_SUMMARY
                 echo "- Status: PASSED" >> $GITHUB_STEP_SUMMARY
