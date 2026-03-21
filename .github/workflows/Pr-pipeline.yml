@@ -1,5 +1,5 @@
 ---
-name: PR Pipeline
+name: PR Pipeline Check
 on:
     pull_request:
         branches: [main]
