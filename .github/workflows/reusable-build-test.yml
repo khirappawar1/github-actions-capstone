@@ -3,7 +3,7 @@ name: Reusable Build and Test
 on:
     workflow_call:
       inputs:
-        pyhton_version:
+        python_version:
             required: true
             type: string
         run_tests:
@@ -25,7 +25,7 @@ jobs:
             - name: Setup python
               uses: actions/setup-python@v5
               with:
-                python-version: ${{inputs.pyhton_version}}
+                python-version: ${{inputs.python_version}}
             - run: npm install -r requiremnets.txt
 
             - name: Run Test
