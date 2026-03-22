@@ -16,12 +16,11 @@ jobs:
     needs: build-test
     uses: ./.github/workflows/reusable-docker.yml
     with:
-      image_name: DOCKER_USERNAME/capstone-app
+      image_name: ${{ secrets.DOCKER_USERNAME }}/capstone-app
       tag: latest
     secrets:
-      docker_username: DOCKER_USERNAME
-      docker_token: DOCKER_TOKEN
-
+      docker_username: ${{ secrets.DOCKER_USERNAME }}
+      docker_token: ${{ secrets.DOCKER_TOKEN }}
   # Optional: Add SHA-based tag as output
   docker-sha:
     needs: build-test
