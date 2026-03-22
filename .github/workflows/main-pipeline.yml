@@ -8,6 +8,8 @@ jobs:
   # 1️⃣ Build & Test Job
   build-test:
     uses: ./.github/workflows/reusable-build-test.yml
+    with:
+      python_version: 3.12
 
   # 2️⃣ Docker Build & Push Job
   docker:
