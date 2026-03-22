@@ -10,7 +10,53 @@ A Flask-based DevOps project demonstrating:
 
 [![Main Pipeline](https://github.com/khirappawar1/github-actions-capstone/actions/workflows/main-pipeline.yml/badge.svg)](https://github.com/khirappawar1/github-actions-capstone/actions/workflows/main-pipeline.yml)
 
+[![Health Check](https://github.com/khirappawar1/github-actions-capstone/actions/workflows/health-check.yml/badge.svg)](https://github.com/khirappawar1/github-actions-capstone/actions/workflows/health-check.yml)
 
+## Pipeline Architecture Diagram
+
+                ┌────────────────────┐
+                │   Pull Request     │
+                └─────────┬──────────┘
+                          │
+                          ▼
+                ┌────────────────────┐
+                │  Build & Test      │
+                └─────────┬──────────┘
+                          │
+                          ▼
+                ┌────────────────────┐
+                │  PR Checks Pass    │
+                └────────────────────┘
+
+
+                ┌────────────────────┐
+                │   Merge to Main    │
+                └─────────┬──────────┘
+                          │
+                          ▼
+                ┌────────────────────┐
+                │  Build & Test      │
+                └─────────┬──────────┘
+                          │
+                          ▼
+                ┌────────────────────┐
+                │ Docker Build & Push│
+                └─────────┬──────────┘
+                          │
+                          ▼
+                ┌────────────────────┐
+                │     Deploy         │
+                └────────────────────┘
+
+
+        ┌──────────────────────────────────────┐
+        │   Scheduled (Every 12 hours)         │
+        └──────────────────────────────────────┘
+                          │
+                          ▼
+                ┌────────────────────┐
+                │  Health Check      │
+                └────────────────────┘
 
 ## 📦 Features
 
