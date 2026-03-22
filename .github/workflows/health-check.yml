@@ -19,12 +19,12 @@ jobs:
         run: docker run -d --name healthcheck -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/capstone-app:latest
 
       - name: Wait for startup
-        run: sleep 5
+        run: sleep 15
 
       - name: Check health endpoint
         id: health
         run: |
-          response=$(curl -s http://localhost:8000/health)
+          response=$(curl -s http://localhost:5000/health)
           if [[ "$response" == '{"status":"ok"}' ]]; then
             echo "PASSED"
             echo "status=PASSED" >> $GITHUB_OUTPUT
