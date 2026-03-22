@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0
         with:
           image-ref: khirappawar1/capstone-app:latest   # ✅ safer than relying on output
           format: 'table'
