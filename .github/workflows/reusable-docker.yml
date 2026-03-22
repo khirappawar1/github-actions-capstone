@@ -33,7 +33,7 @@ jobs:
             password: ${{ secrets.docker_token }}
 
         - name: Docker Build image
-          run: docker build -t ${{ inputs.image_name }}:${{ inputs.tag}}
+          run: docker build -t ${{ inputs.image_name }}:${{ inputs.tag}} .
 
         - name: Docker Push to DockerHub
           run: docker push ${{ inputs.image_name }}:${{ inputs.tag}}
