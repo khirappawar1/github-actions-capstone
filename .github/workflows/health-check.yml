@@ -16,7 +16,7 @@ jobs:
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/capstone-app:latest
 
       - name: Run container
-        run: docker run -d --name healthcheck -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/capstone-app:latest
+        run: docker run -d --name healthcheck -p 8000:5000 ${{ secrets.DOCKER_USERNAME }}/capstone-app:latest
 
       - name: Wait for startup
         run: sleep 15
