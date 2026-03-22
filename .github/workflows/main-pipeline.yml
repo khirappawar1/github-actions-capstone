@@ -5,19 +5,35 @@ on:
     branches: [main]
 
 jobs:
+  # 1️⃣ Build & Test Job
   build-test:
     uses: ./.github/workflows/reusable-build-test.yml
 
+  # 2️⃣ Docker Build & Push Job
   docker:
     needs: build-test
     uses: ./.github/workflows/reusable-docker.yml
     with:
-      image_name: ${{ secrets.DOCKER_USERNAME }}/capstone-app
+      image_name: DOCKER_USERNAME/capstone-app
       tag: latest
     secrets:
-      docker_username: ${{ secrets.DOCKER_USERNAME }}
-      docker_token: ${{ secrets.DOCKER_TOKEN }}
+      docker_username: DOCKER_USERNAME
+      docker_token: DOCKER_TOKEN
 
+  # Optional: Add SHA-based tag as output
+  docker-sha:
+    needs: build-test
+    runs-on: ubuntu-latest
+    outputs:
+      image_sha_tag: ${{ steps.set_tag.outputs.image_sha_tag }}
+    steps:
+      - name: Set short commit hash tag
+        id: set_tag
+        run: |
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          echo "image_sha_tag=${{ secrets.DOCKER_USERNAME }}/capstone-app:sha-${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+  # 3️⃣ Deploy Job
   deploy:
     needs: docker
     runs-on: ubuntu-latest
@@ -25,4 +41,5 @@ jobs:
     steps:
       - name: Deploy
         shell: bash
-        run: echo "Deploying image ${{ needs.docker.outputs.image_url }} to production"
+        run: |
+          echo "Deploying image: ${{ needs.docker.outputs.image_url }} to production"
