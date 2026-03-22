@@ -24,7 +24,7 @@ jobs:
       - name: Check health endpoint
         id: health
         run: |
-          response=$(curl -s http://localhost:5000/health)
+          response=$(curl -s http://localhost:8000/health)
           if [[ "$response" == '{"status":"ok"}' ]]; then
             echo "PASSED"
             echo "status=PASSED" >> $GITHUB_OUTPUT
