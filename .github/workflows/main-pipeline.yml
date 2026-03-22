@@ -5,63 +5,52 @@ on:
     branches: [main]
 
 jobs:
-  # 1️⃣ Build & Test Job
+  # 1️⃣ Build & Test
   build-test:
     uses: ./.github/workflows/reusable-build-test.yml
     with:
       python_version: 3.12
 
-  # 2️⃣ Docker Build & Push Job
+  # 2️⃣ Docker Build & Push
   docker:
     needs: build-test
     uses: ./.github/workflows/reusable-docker.yml
     with:
-       image_name: khirappawar1/capstone-app
-       tag: latest
+      image_name: khirappawar1/capstone-app
+      tag: latest
     secrets:
       docker_username: ${{ secrets.DOCKER_USERNAME }}
       docker_token: ${{ secrets.DOCKER_TOKEN }}
-  # Optional: Add SHA-based tag as output
-  docker-sha:
-    needs: build-test
-    runs-on: ubuntu-latest
-    outputs:
-      image_sha_tag: ${{ steps.set_tag.outputs.image_sha_tag }}
-    steps:
-      - name: Set short commit hash tag
-        id: set_tag
-        run: |
-          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
-          echo "image_sha_tag=${{ secrets.DOCKER_USERNAME }}/capstone-app:sha-${SHORT_SHA}" >> $GITHUB_OUTPUT
 
+  # 3️⃣ Security Scan (Trivy)
   security-scan:
     needs: docker
     runs-on: ubuntu-latest
 
     steps:
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.20.0
-      with:
-        image-ref: ${{ needs.docker.outputs.image_url }}
-        format: 'table'
-        exit-code: '1'
-        severity: 'CRITICAL'
-        ignore-unfixed: true
-        output: 'trivy-report.txt'
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: khirappawar1/capstone-app:latest   # ✅ safer than relying on output
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
+          ignore-unfixed: true
+          output: 'trivy-report.txt'
 
-    - name: Upload Trivy Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: trivy-report
-        path: trivy-report.txt
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.txt
 
-  # 3️⃣ Deploy Job
+  # 4️⃣ Deploy
   deploy:
-    needs: docker
+    needs: security-scan   # ✅ FIXED
     runs-on: ubuntu-latest
     environment: production
+
     steps:
       - name: Deploy
-        shell: bash
         run: |
-          echo "Deploying image: ${{ needs.docker.outputs.image_url }} to production"
+          echo "Deploying image: khirappawar1/capstone-app:latest to production"
