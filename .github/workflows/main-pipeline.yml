@@ -16,8 +16,8 @@ jobs:
     needs: build-test
     uses: ./.github/workflows/reusable-docker.yml
     with:
-      image_name: ${{ secrets.DOCKER_USERNAME }}/capstone-app
-      tag: latest
+       image_name: khirappawar1/capstone-app
+       tag: latest
     secrets:
       docker_username: ${{ secrets.DOCKER_USERNAME }}
       docker_token: ${{ secrets.DOCKER_TOKEN }}
